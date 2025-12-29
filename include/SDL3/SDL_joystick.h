@@ -1193,6 +1193,9 @@ extern SDL_DECLSPEC SDL_JoystickConnectionState SDLCALL SDL_GetJoystickConnectio
  */
 extern SDL_DECLSPEC SDL_PowerState SDLCALL SDL_GetJoystickPowerInfo(SDL_Joystick *joystick, int *percent);
 
+
+extern SDL_DECLSPEC const void * SDLCALL SDL_GetJoystickRawDriverData(SDL_Joystick *joystick, size_t *out_size);
+
 /* Ends C function definitions when using C++ */
 #ifdef __cplusplus
 }

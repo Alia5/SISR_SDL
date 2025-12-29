@@ -151,6 +151,15 @@ static void HIDAPI_DriverSteamDeck_HandleState(SDL_HIDAPI_Device *device,
     SDL_DriverSteamDeck_Context *ctx = (SDL_DriverSteamDeck_Context *)device->context;
     Uint64 timestamp = SDL_GetTicksNS();
 
+    // Emit raw input event with the full HID report
+    SDL_Event raw_event;
+    SDL_zero(raw_event);
+    raw_event.type = SDL_EVENT_JOYSTICK_RAW_INPUT;
+    raw_event.jraw.timestamp = timestamp;
+    raw_event.jraw.which = SDL_GetJoystickID(joystick);
+    SDL_memcpy(raw_event.jraw.data, pInReport, SDL_min(sizeof(raw_event.jraw.data), sizeof(ValveInReport_t)));
+    SDL_PushEvent(&raw_event);
+
     if (pInReport->payload.deckState.ulButtons != ctx->last_button_state) {
         Uint8 hat = 0;
 

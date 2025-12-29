@@ -261,6 +261,9 @@ typedef enum SDL_EventType
     SDL_EVENT_PRIVATE2,
     SDL_EVENT_PRIVATE3,
 
+    /* Custom raw input events */
+    SDL_EVENT_JOYSTICK_RAW_INPUT = 0x7FF0, /**< Raw joystick input data (e.g., Steam Deck) */
+
     /* Internal events */
     SDL_EVENT_POLL_SENTINEL = 0x7F00, /**< Signals the end of an event poll cycle */
 
@@ -606,6 +609,22 @@ typedef struct SDL_JoyBatteryEvent
     SDL_PowerState state; /**< The joystick battery state */
     int percent;          /**< The joystick battery percent charge remaining */
 } SDL_JoyBatteryEvent;
+
+/**
+ * Joystick raw input event structure (event.jraw.*)
+ *
+ * Contains raw HID report data for devices that support it (e.g., Steam Deck)
+ *
+ * \since This struct is available since SDL 3.2.0.
+ */
+typedef struct SDL_JoyRawEvent
+{
+    SDL_EventType type; /**< SDL_EVENT_JOYSTICK_RAW_INPUT */
+    Uint32 reserved;
+    Uint64 timestamp;   /**< In nanoseconds, populated using SDL_GetTicksNS() */
+    SDL_JoystickID which; /**< The joystick instance id */
+    Uint8 data[64];     /**< Raw HID report data */
+} SDL_JoyRawEvent;
 
 /**
  * Gamepad axis motion event structure (event.gaxis.*)
@@ -1006,6 +1025,7 @@ typedef union SDL_Event
     SDL_JoyHatEvent jhat;                   /**< Joystick hat event data */
     SDL_JoyButtonEvent jbutton;             /**< Joystick button event data */
     SDL_JoyBatteryEvent jbattery;           /**< Joystick battery event data */
+    SDL_JoyRawEvent jraw;                   /**< Joystick raw input event data */
     SDL_GamepadDeviceEvent gdevice;         /**< Gamepad device event data */
     SDL_GamepadAxisEvent gaxis;             /**< Gamepad axis event data */
     SDL_GamepadButtonEvent gbutton;         /**< Gamepad button event data */
